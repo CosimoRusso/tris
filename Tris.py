@@ -1,10 +1,8 @@
-import numpy as np
-
 
 class Tris:
     def __init__(self):
         self.turn = True  # x starts
-        self.game = np.array([[None for _ in range(3)] for _ in range(3)])
+        self.game = [None for _ in range(9)]
         self.winner = None
         self.moves = 0
 
@@ -12,34 +10,18 @@ class Tris:
         return self.moves == 9 or self.winner is not None
 
     def put(self, pos):
-        (x, y) = pos
-        assert self.game[x, y] is None
-        assert 0 <= x < 3 and 0 <= y < 3
-        self.game[x, y] = self.turn
+        assert self.game[pos] is None
+        assert 0 <= pos < 9
+        self.game[pos] = self.turn
         self.moves += 1
-        self.check_winner(pos)
+        self.check_winner()
         self.change_turn()
 
-    def check_winner(self, pos):
-        (x, y) = pos
-        row = self.game[x, :]
-        col = self.game[:, y]
-        if row[0] == row[1] == row[2]:
-            self.winner = row[0]
-            return True
-        elif col[0] == col[1] == col[2]:
-            self.winner = col[0]
-            return True
-        elif x == y:
-            diag = [self.game[i, i] for i in range(3)]
-            if diag[0] == diag[1] == diag[2]:
-                self.winner = diag[0]
-                return True
-        counter_diag = [(0, 2), (1, 1), (2, 0)]
-        if pos in counter_diag:
-            list = [self.game[i, j] for (i, j) in counter_diag]
-            if list[0] == list[1] == list[2]:
-                self.winner = list[0]
+    def check_winner(self):
+        positions = [(0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 3, 6), (1, 4, 7), (2, 5, 8), (0, 4, 8), (2, 4, 6)]
+        for (x, y, z) in positions:
+            if self.game[x] is not None and self.game[x] == self.game[y] == self.game[z]:
+                self.winner = self.game[x]
                 return True
 
     def change_turn(self):
@@ -56,25 +38,20 @@ class Tris:
             return 'o'
 
     def get_possible_moves(self):
-        out = []
-        for x in range(3):
-            for y in range(3):
-                if self.game[x, y] is None:
-                    out.append((x, y))
-        return out
+        return [i for (i, x) in enumerate(self.game) if x is None]
 
     def __str__(self):
         out = ""
-        for y in range(3):
-            for x in range(3):
-                c = self.game[x, y]
-                if c is None:
-                    out += " "
-                elif c is True:
-                    out += "x"
-                else:
-                    out += "o"
+        for x in range(9):
+            c = self.game[x]
+            if c is None:
+                out += " "
+            elif c is True:
+                out += "x"
+            else:
+                out += "o"
+            if (x + 1) % 3 == 0:
+                out += "\t%d | %d | %d\n" % (x-2, x-1, x)
+            else:
                 out += " | "
-            out = out[0:len(out)-3]
-            out += "\n"
         return out

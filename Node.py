@@ -5,20 +5,20 @@ class Node:
     def __init__(self, tris, parent):
         self.tris = tris
         self.parent = parent
-        self.minimax = 0
+        self.minimax = None
         self.children = []
         self.move = None
 
     def player(self):
-        """Return True if player is 'x', False if it is 'o'"""
+        """Return 'x' or 'o'"""
         return self.tris.whose_turn()
 
     def actions(self):
-        """Returns all the possible actions for the tris game in the form (x, y)"""
+        """Returns all the possible actions for the tris game in the form 'x:int'"""
         return self.tris.get_possible_moves()
 
     def result(self, move):
-        """Given a move in the form (x, y) returns a new Node whose tris is the actual (deepcopied) tree with the move done"""
+        """Given a move in the form of an integer returns a new Node whose tris is the actual (deepcopied) tree with the move done"""
         tris = deepcopy(self.tris)
         tris.put(move)
         n = Node(tris, self)
