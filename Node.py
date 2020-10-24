@@ -2,12 +2,12 @@ from copy import deepcopy
 
 
 class Node:
-    def __init__(self, tris, parent):
+    def __init__(self, tris, parent, move=None):
         self.tris = tris
         self.parent = parent
         self.minimax = None
         self.children = []
-        self.move = None
+        self.move = move
 
     def player(self):
         """Return 'x' or 'o'"""
@@ -21,8 +21,7 @@ class Node:
         """Given a move in the form of an integer returns a new Node whose tris is the actual (deepcopied) tree with the move done"""
         tris = deepcopy(self.tris)
         tris.put(move)
-        n = Node(tris, self)
-        n.move = move
+        n = Node(tris, self, move=move)
         self.children.append(n)
         return n
 
